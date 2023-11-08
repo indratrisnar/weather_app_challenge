@@ -9,7 +9,7 @@ class HourlyWeatherShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color baseColor = Colors.grey[800]!;
+    Color baseColor = Colors.grey[700]!;
     Color highlightColor = Colors.grey;
     return Shimmer.fromColors(
       baseColor: baseColor,
