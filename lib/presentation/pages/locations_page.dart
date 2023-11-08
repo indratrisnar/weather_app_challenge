@@ -28,44 +28,11 @@ class LocationsPage extends StatefulWidget {
 class _LocationsPageState extends State<LocationsPage> {
   CityController cityController = Get.find<CityController>();
 
-  addNewCityView() {
-    final edtCity = TextEditingController();
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          0,
-          20,
-          MediaQuery.of(context).viewInsets.bottom + 40,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            DInput(
-              controller: edtCity,
-              radius: BorderRadius.circular(16),
-              hint: 'Type city name',
-              autofocus: true,
-            ),
-            DView.height(),
-            DButtonElevation(
-              height: 46,
-              radius: 16,
-              onClick: () => addCity(edtCity.text.capitalize),
-              mainColor: Theme.of(context).primaryColor,
-              child: const Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  refresh() {
+    List<String> cities = cityController.cities;
+    if (cities.isEmpty) return;
+
+    context.read<LocationsBloc>().add(OnGetLocations(cities));
   }
 
   addCity(String city) async {
@@ -73,13 +40,6 @@ class _LocationsPageState extends State<LocationsPage> {
       Navigator.pop(context);
       refresh();
     });
-  }
-
-  refresh() {
-    List<String> cities = cityController.cities;
-    if (cities.isEmpty) return;
-
-    context.read<LocationsBloc>().add(OnGetLocations(cities));
   }
 
   removeCity(String city) {
@@ -297,6 +257,46 @@ class _LocationsPageState extends State<LocationsPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  addNewCityView() {
+    final edtCity = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          0,
+          20,
+          MediaQuery.of(context).viewInsets.bottom + 40,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            DInput(
+              controller: edtCity,
+              radius: BorderRadius.circular(16),
+              hint: 'Type city name',
+              autofocus: true,
+            ),
+            DView.height(),
+            DButtonElevation(
+              height: 46,
+              radius: 16,
+              onClick: () => addCity(edtCity.text.capitalize),
+              mainColor: Theme.of(context).primaryColor,
+              child: const Text(
+                'Add',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
