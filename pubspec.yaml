@@ -24,6 +24,8 @@ dependencies:
   d_info: ^0.2.2
   d_button: ^0.0.10
   google_fonts: ^4.0.5
+  grouped_list: ^5.1.2
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -216,6 +216,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.5"
+  grouped_list:
+    dependency: "direct main"
+    description:
+      name: grouped_list
+      sha256: fef106470186081c32636aa055492eee7fc7fe8bf0921a48d31ded24821af19f
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.2"
   http:
     dependency: "direct main"
     description:
@@ -432,6 +440,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
