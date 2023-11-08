@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_forecast/api/urls.dart';
-import 'package:weather_forecast/models/weather.dart';
+import 'package:weather_forecast/data/models/weather.dart';
 import 'package:weather_forecast/presentation/bloc/current_weather/current_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
 import 'package:weather_forecast/presentation/controllers/city_controller.dart';

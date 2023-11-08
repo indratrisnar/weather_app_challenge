@@ -1,6 +1,6 @@
 import 'package:d_method/d_method.dart';
 import 'package:get/get.dart';
-import 'package:weather_forecast/source/city_source.dart';
+import 'package:weather_forecast/data/source/city_source.dart';
 
 class CityController extends GetxController {
   CityController(this.citySource);

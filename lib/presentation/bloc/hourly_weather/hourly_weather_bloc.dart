@@ -1,6 +1,6 @@
-import 'package:weather_forecast/models/weather.dart';
+import 'package:weather_forecast/data/models/weather.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_forecast/source/weather_source.dart';
+import 'package:weather_forecast/data/source/weather_source.dart';
 part 'hourly_weather_event.dart';
 part 'hourly_weather_state.dart';
 

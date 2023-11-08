@@ -2,7 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_forecast/api/urls.dart';
-import 'package:weather_forecast/models/weather.dart';
+import 'package:weather_forecast/data/models/weather.dart';
 
 class ItemHourly extends StatelessWidget {
   const ItemHourly({super.key, required this.weather});

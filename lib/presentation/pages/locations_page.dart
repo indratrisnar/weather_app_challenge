@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/instance_manager.dart';
 import 'package:weather_forecast/commons/extension.dart';
-import 'package:weather_forecast/models/weather.dart';
+import 'package:weather_forecast/data/models/weather.dart';
 import 'package:weather_forecast/presentation/bloc/current_weather/current_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
 

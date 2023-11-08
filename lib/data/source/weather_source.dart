@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:d_method/d_method.dart';
 import 'package:dartz/dartz.dart';
 import 'package:weather_forecast/api/urls.dart';
-import 'package:weather_forecast/models/weather.dart';
+import 'package:weather_forecast/data/models/weather.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherSource {

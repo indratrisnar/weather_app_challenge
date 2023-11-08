@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/locations/locations_bloc.dart';
 import 'package:weather_forecast/presentation/controllers/city_controller.dart';
-import 'package:weather_forecast/source/city_source.dart';
-import 'package:weather_forecast/source/weather_source.dart';
+import 'package:weather_forecast/data/source/city_source.dart';
+import 'package:weather_forecast/data/source/weather_source.dart';
 import 'package:http/http.dart' as http;
 import 'presentation/bloc/current_weather/current_weather_bloc.dart';
 
