@@ -35,7 +35,7 @@ class CityController extends GetxController {
     DMethod.printBasic('Cities: $cities');
   }
 
-  addNewCity(String n) async {
+  Future<void> addNewCity(String n) async {
     if (cities.isEmpty) {
       setCurrentCity(n);
     }
