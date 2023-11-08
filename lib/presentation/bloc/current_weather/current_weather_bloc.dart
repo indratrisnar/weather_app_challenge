@@ -11,7 +11,7 @@ class CurrentWeatherBloc
     on<OnGetCurrentWeather>((event, emit) async {
       emit(CurrentWeatherLoading());
       final result = await weatherSource.getCurrentWeather(event.city);
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(milliseconds: 1500));
       result.fold(
         (error) => emit(CurrentWeatherError(error)),
         (data) => emit(CurrentWeatherLoaded(data)),
