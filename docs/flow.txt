@@ -17,9 +17,7 @@ Get Current Weather Page:
     - show response to BlocBuilder
 
 Locations Page:
-    - init (refresh):
-        // if state are present, return
-        // if state empty, call
+    - init (refresh)
     - Add New City:
         - show modal bottom sheet
         - submit:
