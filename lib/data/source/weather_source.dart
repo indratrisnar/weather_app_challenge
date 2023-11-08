@@ -58,8 +58,13 @@ class WeatherSource {
     try {
       List<Weather> list = [];
       for (String city in cities) {
-        final result = await getCurrentWeather(city);
-        result.fold((err) => null, (data) => list.add(data));
+        Uri url = Uri.parse(URLs.currentWeather(city));
+        final response = await client.get(url);
+        // DMethod.printResponse(response);
+        if (response.statusCode == 200) {
+          Weather weather = Weather.fromJson(jsonDecode(response.body));
+          list.add(weather);
+        }
       }
       return Right(list);
     } catch (e) {
