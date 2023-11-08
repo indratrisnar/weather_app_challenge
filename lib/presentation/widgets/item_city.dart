@@ -98,7 +98,7 @@ class ItemCity extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
               ),
               width: 1.5,
-              height: 40,
+              height: 32,
               margin: const EdgeInsets.symmetric(horizontal: 8),
             ),
             Column(
