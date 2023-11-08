@@ -1,3 +1,4 @@
+import 'package:blur/blur.dart';
 import 'package:d_input/d_input.dart';
 import 'package:d_view/d_view.dart';
 import 'package:extended_image/extended_image.dart';
@@ -13,6 +14,7 @@ import 'package:weather_forecast/presentation/bloc/locations/locations_bloc.dart
 import 'package:weather_forecast/presentation/controllers/city_controller.dart';
 import 'package:d_button/d_button.dart';
 import 'package:weather_forecast/presentation/widgets/item_city.dart';
+import 'package:weather_forecast/presentation/widgets/locations_shimmer.dart';
 import 'package:weather_forecast/presentation/widgets/top_down_shadow.dart';
 
 class LocationsPage extends StatefulWidget {
@@ -66,10 +68,11 @@ class _LocationsPageState extends State<LocationsPage> {
     );
   }
 
-  addCity(String city) {
-    cityController.addNewCity(city);
-    Navigator.pop(context);
-    refresh();
+  addCity(String city) async {
+    cityController.addNewCity(city).then((value) {
+      Navigator.pop(context);
+      refresh();
+    });
   }
 
   refresh() {
@@ -94,8 +97,7 @@ class _LocationsPageState extends State<LocationsPage> {
 
   @override
   void initState() {
-    // if state has no data
-    if (context.read<LocationsBloc>().state is! LocationsLoaded) refresh();
+    refresh();
 
     super.initState();
   }
@@ -141,25 +143,28 @@ class _LocationsPageState extends State<LocationsPage> {
   Widget citiesView() {
     return BlocBuilder<LocationsBloc, LocationsState>(
       builder: (context, state) {
-        if (state is LocationsLoading) return DView.loadingCircle();
+        if (state is LocationsLoading) return const LocationShimmer();
         if (state is LocationsError) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 30,
                     vertical: 8,
                   ),
                   child: const Text(
                     'Cities is not present',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                ).frosted(
+                  blur: 1,
+                  borderRadius: BorderRadius.circular(30),
+                  frostColor: Colors.white.withOpacity(0.5),
                 ),
                 DView.height(),
                 DButtonCircle(
