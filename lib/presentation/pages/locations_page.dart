@@ -35,7 +35,6 @@ class _LocationsPageState extends State<LocationsPage>
     if (cities.isEmpty) return;
 
     context.read<LocationsBloc>().add(OnGetLocations(cities));
-    thisController.reset();
   }
 
   addCity(String city) async {
@@ -150,9 +149,7 @@ class _LocationsPageState extends State<LocationsPage>
               borderColor: Colors.blueGrey.shade300,
               mainColor: Colors.transparent,
               child: const Icon(Icons.clear, color: Colors.blueGrey),
-              onClick: () {
-                thisController.searchAnimation.animateBack(0.0);
-              },
+              onClick: () => thisController.closeSearchBox(),
             ),
           ],
         ),
@@ -161,12 +158,7 @@ class _LocationsPageState extends State<LocationsPage>
   }
 
   Widget citiesView() {
-    return BlocConsumer<LocationsBloc, LocationsState>(
-      listener: (context, state) {
-        if (state is LocationsError || state is LocationsLoaded) {
-          thisController.btnAddAnimation.forward(from: 0.0);
-        }
-      },
+    return BlocBuilder<LocationsBloc, LocationsState>(
       builder: (context, state) {
         if (state is LocationsLoading) return const LocationShimmer();
         if (state is LocationsError) {
@@ -290,29 +282,43 @@ class _LocationsPageState extends State<LocationsPage>
       height: kToolbarHeight,
       child: AnimatedBuilder(
         animation: thisController.searchAnimation,
-        builder: (context, child) {
-          if (thisController.searchAnimation.value == 1) {
-            return searchBox();
-          }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        builder: (context, _) {
+          return IndexedStack(
+            alignment: Alignment.bottomCenter,
+            index: thisController.searchAnimation.value > 0 ? 0 : 1,
             children: [
-              const Text(
-                'Saved Locations',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+              SlideTransition(
+                position: thisController.searchOffset,
+                child: FadeTransition(
+                  opacity: thisController.searchAnimation,
+                  child: searchBox(),
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  thisController.searchAnimation.forward(from: 0.0);
-                },
-                icon: Transform.flip(
-                  flipX: true,
-                  child: const Icon(Icons.search),
+              SlideTransition(
+                position: thisController.headerOffset,
+                child: FadeTransition(
+                  opacity: thisController.headerAnimation,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Saved Locations',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => thisController.openSearchBox(),
+                        icon: Transform.flip(
+                          flipX: true,
+                          child: const Icon(Icons.search),
+                        ),
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
                 ),
-                color: Colors.white,
               ),
             ],
           );
