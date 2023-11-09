@@ -11,7 +11,7 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     on<OnGetLocations>((event, emit) async {
       emit(LocationsLoading());
       final result = await weatherSource.getLocationsWeather(event.cities);
-      await Future.delayed(const Duration(milliseconds: 300));
+      // await Future.delayed(const Duration(milliseconds: 300));
       result.fold(
         (error) => emit(LocationsError(error)),
         (data) {

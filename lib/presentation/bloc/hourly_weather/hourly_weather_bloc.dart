@@ -10,7 +10,7 @@ class HourlyWeatherBloc extends Bloc<HourlyWeatherEvent, HourlyWeatherState> {
     on<OnGetHourlyWeather>((event, emit) async {
       emit(HourlyWeatherLoading());
       final result = await weatherSource.getHourlyWeather(event.city);
-      await Future.delayed(const Duration(milliseconds: 1500));
+      await Future.delayed(const Duration(milliseconds: 1200));
       result.fold(
         (error) => emit(HourlyWeatherError(error)),
         (data) => emit(HourlyWeatherLoaded(data)),
