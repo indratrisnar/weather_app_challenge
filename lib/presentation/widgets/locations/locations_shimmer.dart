@@ -11,7 +11,7 @@ class LocationShimmer extends StatelessWidget {
     Color baseColor = Colors.white54;
     Color highlightColor = Colors.grey;
     return ListView.builder(
-      itemCount: 5,
+      itemCount: 3,
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(0),
       itemBuilder: (context, index) {
