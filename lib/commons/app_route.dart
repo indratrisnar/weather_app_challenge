@@ -8,22 +8,8 @@ class AppRoute {
 
   static Route<dynamic>? generate(RouteSettings settings) {
     if (settings.name == '/') {
-      return PageRouteBuilder(
-        // transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        //   const Offset begin = Offset(0, 1);
-        //   const Offset end = Offset.zero;
-        //   final Tween<Offset> tween = Tween(begin: begin, end: end);
-        //   final Animation<Offset> offsetAnimation = animation.drive(tween);
-        //   return SlideTransition(
-        //     position: offsetAnimation,
-        //     child: child,
-        //   );
-        // },
-        transitionDuration: const Duration(milliseconds: 1200),
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return const CurrentWeatherPage();
-        },
-      );
+      return MaterialPageRoute(
+          builder: (context) => const CurrentWeatherPage());
     }
     if (settings.name == locations) {
       return PageRouteBuilder(

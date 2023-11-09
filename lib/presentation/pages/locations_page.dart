@@ -13,8 +13,8 @@ import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather
 import 'package:weather_forecast/presentation/bloc/locations/locations_bloc.dart';
 import 'package:weather_forecast/presentation/controllers/city_controller.dart';
 import 'package:d_button/d_button.dart';
-import 'package:weather_forecast/presentation/widgets/item_city.dart';
-import 'package:weather_forecast/presentation/widgets/locations_shimmer.dart';
+import 'package:weather_forecast/presentation/widgets/locations/item_city.dart';
+import 'package:weather_forecast/presentation/widgets/locations/locations_shimmer.dart';
 import 'package:weather_forecast/presentation/widgets/top_down_shadow.dart';
 
 class LocationsPage extends StatefulWidget {

@@ -26,6 +26,7 @@ dependencies:
   google_fonts: ^4.0.5
   grouped_list: ^5.1.2
   shimmer: ^3.0.0
+  # animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:

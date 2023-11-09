@@ -2,7 +2,7 @@ import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'load_box.dart';
+import '../load_box.dart';
 
 class HourlyWeatherShimmer extends StatelessWidget {
   const HourlyWeatherShimmer({super.key});
