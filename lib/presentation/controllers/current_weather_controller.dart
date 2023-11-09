@@ -98,9 +98,7 @@ class CurrentWeatherController {
     windAnimation.forward(from: 0.0);
     await Future.delayed(const Duration(milliseconds: 200));
     feelsLikeAnimation.forward(from: 0.0);
-
-    // start with dateMonthAnimation
-    // await Future.delayed(const Duration(milliseconds: 200 * 11));
+    await Future.delayed(const Duration(milliseconds: 200));
     hourlyAnimation.forward(from: 0.0);
   }
 

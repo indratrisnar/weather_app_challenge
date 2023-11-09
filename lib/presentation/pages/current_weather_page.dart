@@ -395,11 +395,11 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
             List<Weather> weathers = state.weathers;
             return SlideTransition(
               position: Tween(
-                begin: const Offset(0.5, 0),
+                begin: const Offset(0.7, 0),
                 end: Offset.zero,
-              ).animate(thisController.humidityAnimation),
+              ).animate(thisController.hourlyAnimation),
               child: FadeTransition(
-                opacity: thisController.humidityAnimation,
+                opacity: thisController.hourlyAnimation,
                 child: Container(
                   height: 200,
                   decoration: decoration,
