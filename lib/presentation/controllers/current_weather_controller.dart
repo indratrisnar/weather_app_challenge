@@ -14,6 +14,17 @@ class CurrentWeatherController {
   late AnimationController windAnimation;
   late AnimationController feelsLikeAnimation;
   late AnimationController hourlyAnimation;
+  late Animation<Offset> dateMonthOffset;
+  late Animation<Offset> updatedOffset;
+  late Animation<Offset> iconOffset;
+  late Animation<Offset> mainOffset;
+  late Animation<Offset> descriptionOffset;
+  late Animation<Offset> temperatureOffset;
+  late Animation<Offset> humidityOffset;
+  late Animation<Offset> pressureOffset;
+  late Animation<Offset> windOffset;
+  late Animation<Offset> feelsLikeOffset;
+  late Animation<Offset> hourlyOffset;
 
   init({
     required TickerProvider vsync,
@@ -62,6 +73,29 @@ class CurrentWeatherController {
       vsync: vsync,
       duration: const Duration(milliseconds: 500),
     );
+
+    Tween<Offset> tweenUp = Tween(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    );
+    dateMonthOffset = tweenUp.animate(dateMonthAnimation);
+    updatedOffset = tweenUp.animate(updatedAnimation);
+    iconOffset = tweenUp.animate(iconAnimation);
+    mainOffset = tweenUp.animate(mainAnimation);
+    descriptionOffset = tweenUp.animate(descriptionAnimation);
+    temperatureOffset = tweenUp.animate(temperatureAnimation);
+    Tween<Offset> tweenLeft = Tween(
+      begin: const Offset(0.3, 0),
+      end: Offset.zero,
+    );
+    humidityOffset = tweenLeft.animate(humidityAnimation);
+    pressureOffset = tweenLeft.animate(pressureAnimation);
+    windOffset = tweenLeft.animate(windAnimation);
+    feelsLikeOffset = tweenLeft.animate(feelsLikeAnimation);
+    hourlyOffset = Tween(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(hourlyAnimation);
   }
 
   reset() {

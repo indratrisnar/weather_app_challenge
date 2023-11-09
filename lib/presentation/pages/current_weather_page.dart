@@ -150,10 +150,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
           return Column(
             children: [
               SlideTransition(
-                position: Tween(
-                  begin: const Offset(0, 0.2),
-                  end: Offset.zero,
-                ).animate(thisController.dateMonthAnimation),
+                position: thisController.dateMonthOffset,
                 child: FadeTransition(
                   opacity: thisController.dateMonthAnimation,
                   child: Text(
@@ -172,10 +169,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                 ),
               ),
               SlideTransition(
-                position: Tween(
-                  begin: const Offset(0, 0.2),
-                  end: Offset.zero,
-                ).animate(thisController.updatedAnimation),
+                position: thisController.updatedOffset,
                 child: FadeTransition(
                   opacity: thisController.updatedAnimation,
                   child: Text(
@@ -194,10 +188,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                 ),
               ),
               SlideTransition(
-                position: Tween(
-                  begin: const Offset(0, 0.2),
-                  end: Offset.zero,
-                ).animate(thisController.iconAnimation),
+                position: thisController.iconOffset,
                 child: FadeTransition(
                   opacity: thisController.iconAnimation,
                   child: ExtendedImage.network(
@@ -207,10 +198,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                 ),
               ),
               SlideTransition(
-                position: Tween(
-                  begin: const Offset(0, 0.2),
-                  end: Offset.zero,
-                ).animate(thisController.mainAnimation),
+                position: thisController.mainOffset,
                 child: FadeTransition(
                   opacity: thisController.mainAnimation,
                   child: Text(
@@ -230,10 +218,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                 ),
               ),
               SlideTransition(
-                position: Tween(
-                  begin: const Offset(0, 0.2),
-                  end: Offset.zero,
-                ).animate(thisController.descriptionAnimation),
+                position: thisController.descriptionOffset,
                 child: FadeTransition(
                   opacity: thisController.descriptionAnimation,
                   child: Text(
@@ -253,10 +238,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
               ),
               DView.height(10),
               SlideTransition(
-                position: Tween(
-                  begin: const Offset(0, 0.2),
-                  end: Offset.zero,
-                ).animate(thisController.temperatureAnimation),
+                position: thisController.temperatureOffset,
                 child: FadeTransition(
                   opacity: thisController.temperatureAnimation,
                   child: Row(
@@ -305,10 +287,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                 padding: const EdgeInsets.all(0),
                 children: [
                   SlideTransition(
-                    position: Tween(
-                      begin: const Offset(0.5, 0),
-                      end: Offset.zero,
-                    ).animate(thisController.humidityAnimation),
+                    position: thisController.humidityOffset,
                     child: FadeTransition(
                       opacity: thisController.humidityAnimation,
                       child: ItemRecap(
@@ -319,10 +298,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                     ),
                   ),
                   SlideTransition(
-                    position: Tween(
-                      begin: const Offset(0.5, 0),
-                      end: Offset.zero,
-                    ).animate(thisController.pressureAnimation),
+                    position: thisController.pressureOffset,
                     child: FadeTransition(
                       opacity: thisController.pressureAnimation,
                       child: ItemRecap(
@@ -333,10 +309,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                     ),
                   ),
                   SlideTransition(
-                    position: Tween(
-                      begin: const Offset(0.5, 0),
-                      end: Offset.zero,
-                    ).animate(thisController.windAnimation),
+                    position: thisController.windOffset,
                     child: FadeTransition(
                       opacity: thisController.windAnimation,
                       child: ItemRecap(
@@ -347,10 +320,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                     ),
                   ),
                   SlideTransition(
-                    position: Tween(
-                      begin: const Offset(0.5, 0),
-                      end: Offset.zero,
-                    ).animate(thisController.feelsLikeAnimation),
+                    position: thisController.feelsLikeOffset,
                     child: FadeTransition(
                       opacity: thisController.feelsLikeAnimation,
                       child: ItemRecap(
@@ -394,10 +364,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
           if (state is HourlyWeatherLoaded) {
             List<Weather> weathers = state.weathers;
             return SlideTransition(
-              position: Tween(
-                begin: const Offset(0.7, 0),
-                end: Offset.zero,
-              ).animate(thisController.hourlyAnimation),
+              position: thisController.hourlyOffset,
               child: FadeTransition(
                 opacity: thisController.hourlyAnimation,
                 child: Container(
