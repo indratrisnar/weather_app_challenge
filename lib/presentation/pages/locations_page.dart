@@ -13,6 +13,7 @@ import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather
 import 'package:weather_forecast/presentation/bloc/locations/locations_bloc.dart';
 import 'package:weather_forecast/presentation/controllers/city_controller.dart';
 import 'package:d_button/d_button.dart';
+import 'package:weather_forecast/presentation/controllers/locations_controller.dart';
 import 'package:weather_forecast/presentation/widgets/locations/item_city.dart';
 import 'package:weather_forecast/presentation/widgets/locations/locations_shimmer.dart';
 import 'package:weather_forecast/presentation/widgets/top_down_shadow.dart';
@@ -24,14 +25,17 @@ class LocationsPage extends StatefulWidget {
   State<LocationsPage> createState() => _LocationsPageState();
 }
 
-class _LocationsPageState extends State<LocationsPage> {
+class _LocationsPageState extends State<LocationsPage>
+    with TickerProviderStateMixin {
   CityController cityController = Get.find<CityController>();
+  LocationsController thisController = LocationsController();
 
   refresh() {
     List<String> cities = cityController.cities;
     if (cities.isEmpty) return;
 
     context.read<LocationsBloc>().add(OnGetLocations(cities));
+    thisController.reset();
   }
 
   addCity(String city) async {
@@ -56,9 +60,16 @@ class _LocationsPageState extends State<LocationsPage> {
 
   @override
   void initState() {
+    thisController.init(vsync: this);
     refresh();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    thisController.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +97,7 @@ class _LocationsPageState extends State<LocationsPage> {
           ),
           Column(
             children: [
-              appBar(),
+              header(),
               Expanded(child: citiesView()),
               Padding(
                 padding: EdgeInsets.all(DView.defaultSpace),
@@ -94,13 +105,68 @@ class _LocationsPageState extends State<LocationsPage> {
               ),
             ],
           ),
+          // searchBox(),
         ]),
       ),
     );
   }
 
+  Widget searchBox() {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 4, 4, 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: const InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(0),
+                  border: InputBorder.none,
+                  hintText: 'Find city',
+                  hintStyle: TextStyle(
+                    color: Colors.black38,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                style: const TextStyle(
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.bold,
+                ),
+                onChanged: (value) {
+                  context.read<LocationsBloc>().add(OnSearchLocation(value));
+                },
+              ),
+            ),
+            DButtonBorder(
+              height: 36,
+              width: 36,
+              radius: 36,
+              borderWidth: 1,
+              borderColor: Colors.blueGrey.shade300,
+              mainColor: Colors.transparent,
+              child: const Icon(Icons.clear, color: Colors.blueGrey),
+              onClick: () {
+                thisController.searchAnimation.animateBack(0.0);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget citiesView() {
-    return BlocBuilder<LocationsBloc, LocationsState>(
+    return BlocConsumer<LocationsBloc, LocationsState>(
+      listener: (context, state) {
+        if (state is LocationsError || state is LocationsLoaded) {
+          thisController.btnAddAnimation.forward(from: 0.0);
+        }
+      },
       builder: (context, state) {
         if (state is LocationsLoading) return const LocationShimmer();
         if (state is LocationsError) {
@@ -213,59 +279,84 @@ class _LocationsPageState extends State<LocationsPage> {
     );
   }
 
-  Padding appBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        title: const Text('Saved Locations'),
-        titleTextStyle: const TextStyle(fontSize: 18),
-        forceMaterialTransparency: true,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Transform.flip(
-              flipX: true,
-              child: const Icon(Icons.search),
-            ),
-          ),
-        ],
+  Container header() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(
+        20,
+        MediaQuery.of(context).padding.top,
+        20,
+        0,
+      ),
+      height: kToolbarHeight,
+      child: AnimatedBuilder(
+        animation: thisController.searchAnimation,
+        builder: (context, child) {
+          if (thisController.searchAnimation.value == 1) {
+            return searchBox();
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Saved Locations',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  thisController.searchAnimation.forward(from: 0.0);
+                },
+                icon: Transform.flip(
+                  flipX: true,
+                  child: const Icon(Icons.search),
+                ),
+                color: Colors.white,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
   Widget addNewButton() {
-    return DButtonFlat(
-      // mainColor: Theme.of(context).primaryColor.withOpacity(0.8),
-      mainColor: Colors.transparent,
-      height: 46,
-      onClick: () => addNewCityView(),
-      radius: 16,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.add_circle_outlined,
-            color: Colors.white,
+    return SlideTransition(
+      position: thisController.btnAddOffset,
+      child: FadeTransition(
+        opacity: thisController.btnAddAnimation,
+        child: DButtonFlat(
+          // mainColor: Theme.of(context).primaryColor.withOpacity(0.8),
+          mainColor: Colors.transparent,
+          height: 46,
+          onClick: () => addNewCityView(),
+          radius: 16,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.add_circle_outlined,
+                color: Colors.white,
+              ),
+              DView.width(8),
+              const Text(
+                'Add New City',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  height: 1,
+                ),
+              ),
+            ],
           ),
-          DView.width(8),
-          const Text(
-            'Add New City',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              height: 1,
-            ),
-          ),
-        ],
+        ).frosted(
+          blur: 2,
+          borderRadius: BorderRadius.circular(16),
+          frostColor: Colors.blueGrey,
+          frostOpacity: 0.5,
+        ),
       ),
-    ).frosted(
-      blur: 2,
-      borderRadius: BorderRadius.circular(16),
-      frostColor: Colors.blueGrey,
-      frostOpacity: 0.5,
     );
   }
 
