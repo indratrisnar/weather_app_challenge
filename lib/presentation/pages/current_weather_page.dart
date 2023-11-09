@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_forecast/api/urls.dart';
+import 'package:weather_forecast/commons/app_route.dart';
 import 'package:weather_forecast/data/models/weather.dart';
 import 'package:weather_forecast/presentation/bloc/current_weather/current_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
 import 'package:weather_forecast/presentation/controllers/city_controller.dart';
-import 'package:weather_forecast/presentation/pages/locations_page.dart';
 import 'package:weather_forecast/presentation/widgets/bottom_up_shadow.dart';
 import 'package:weather_forecast/presentation/widgets/current_weather_shimmer.dart';
 import 'package:weather_forecast/presentation/widgets/hourly_weather_shimmer.dart';
@@ -47,7 +47,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: header(),
+        title: appBar(),
       ),
       body: Stack(
         children: [
@@ -306,7 +306,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage> {
     );
   }
 
-  Widget header() {
+  Widget appBar() {
     return Row(
       children: [
         const Icon(
@@ -318,16 +318,22 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage> {
         Obx(
           () {
             String cityName = cityController.currentCity;
-            return Text(
-              cityName == '' ? 'City is not setup' : cityName,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
+            return Hero(
+              tag: 'city_name_tag_$cityName',
+              child: Material(
+                color: Colors.transparent,
+                child: Text(
+                  cityName == '' ? 'City is not setup' : cityName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           },
@@ -335,7 +341,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage> {
         const Spacer(),
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, LocationsPage.route).then((value) {
+            Navigator.pushNamed(context, AppRoute.locations).then((value) {
               if (value != null && value == 'refresh') refresh();
             });
           },

@@ -26,7 +26,7 @@ class CityController extends GetxController {
   final _cities = <String>[].obs;
   List<String> get cities => _cities;
 
-  setCurrentCity(String n) async {
+  Future<void> setCurrentCity(String n) async {
     bool saved = await citySource.cacheCurrentCity(n);
     if (saved) _currentCity.value = n;
 

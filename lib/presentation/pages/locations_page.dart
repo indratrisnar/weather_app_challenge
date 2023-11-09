@@ -19,7 +19,6 @@ import 'package:weather_forecast/presentation/widgets/top_down_shadow.dart';
 
 class LocationsPage extends StatefulWidget {
   const LocationsPage({super.key});
-  static const route = '/locations';
 
   @override
   State<LocationsPage> createState() => _LocationsPageState();
@@ -159,8 +158,11 @@ class _LocationsPageState extends State<LocationsPage> {
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      cityController.setCurrentCity(weather.cityName ?? '');
-                      Navigator.pop(context, 'refresh');
+                      cityController
+                          .setCurrentCity(weather.cityName ?? '')
+                          .then((value) {
+                        Navigator.pop(context, 'refresh');
+                      });
                     },
                     child: Dismissible(
                       key: Key('${weather.id}'),
@@ -234,9 +236,10 @@ class _LocationsPageState extends State<LocationsPage> {
     );
   }
 
-  DButtonFlat addNewButton() {
+  Widget addNewButton() {
     return DButtonFlat(
-      mainColor: Theme.of(context).primaryColor.withOpacity(0.8),
+      // mainColor: Theme.of(context).primaryColor.withOpacity(0.8),
+      mainColor: Colors.transparent,
       height: 46,
       onClick: () => addNewCityView(),
       radius: 16,
@@ -258,6 +261,11 @@ class _LocationsPageState extends State<LocationsPage> {
           ),
         ],
       ),
+    ).frosted(
+      blur: 2,
+      borderRadius: BorderRadius.circular(16),
+      frostColor: Colors.blueGrey,
+      frostOpacity: 0.5,
     );
   }
 

@@ -46,19 +46,25 @@ class ItemCity extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          weather.cityName ?? '',
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 26,
-            shadows: [
-              Shadow(
-                color: Colors.black38,
-                blurRadius: 6,
-                offset: Offset(2, 2),
+        Hero(
+          tag: 'city_name_tag_${weather.cityName}',
+          child: Material(
+            color: Colors.transparent,
+            child: Text(
+              weather.cityName ?? '',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+                shadows: [
+                  Shadow(
+                    color: Colors.black38,
+                    blurRadius: 6,
+                    offset: Offset(2, 2),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         Text(
@@ -72,6 +78,15 @@ class ItemCity extends StatelessWidget {
         DView.height(16),
         Row(
           children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              width: 1.5,
+              height: 30,
+            ),
+            DView.width(8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -92,15 +107,16 @@ class ItemCity extends StatelessWidget {
                 ),
               ],
             ),
+            DView.width(8),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white70,
                 borderRadius: BorderRadius.circular(30),
               ),
               width: 1.5,
-              height: 32,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
+              height: 30,
             ),
+            DView.width(8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
