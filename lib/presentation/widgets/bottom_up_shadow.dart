@@ -12,6 +12,7 @@ class BottomUpShadow extends StatelessWidget {
           end: Alignment.topCenter,
           colors: [
             Colors.black87,
+            Colors.black54,
             Colors.transparent,
           ],
         ),
