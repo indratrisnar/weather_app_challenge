@@ -21,7 +21,7 @@ class HourlyWeatherShimmer extends StatelessWidget {
           const LoadBox(height: double.infinity, width: 50),
           ...List.generate(5, (index) {
             return Padding(
-              padding: const EdgeInsets.only(left: 36),
+              padding: const EdgeInsets.only(left: 24),
               child: Column(
                 children: [
                   // time
@@ -29,10 +29,10 @@ class HourlyWeatherShimmer extends StatelessWidget {
                   DView.height(2),
                   // unit
                   const LoadBox(height: 10, width: 16),
-                  DView.height(20),
+                  DView.height(16),
                   // icon
-                  const LoadBox(height: 40, width: 45),
-                  DView.height(20),
+                  const LoadBox(height: 35, width: 40),
+                  DView.height(16),
                   // temperature
                   const LoadBox(height: 24, width: 24),
                   DView.height(8),

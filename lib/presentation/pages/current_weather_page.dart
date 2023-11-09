@@ -33,6 +33,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
   CityController cityController = Get.find<CityController>();
   CurrentWeatherController thisController = CurrentWeatherController();
   ScrollController scrollHourly = ScrollController();
+  ValueNotifier<int> leftIndexHourly = ValueNotifier(0);
 
   refresh() {
     String currentCity = cityController.currentCity;
@@ -42,11 +43,26 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
     thisController.reset();
   }
 
+  detectDateGroup() {
+    double itemWidth = 60;
+    double space = 8;
+    scrollHourly.addListener(() {
+      double currentLeftPosition = scrollHourly.position.pixels;
+      double spaceLength = (currentLeftPosition ~/ itemWidth) * space;
+      int index = ((currentLeftPosition - spaceLength) / itemWidth).floor();
+      if (index != leftIndexHourly.value) {
+        leftIndexHourly.value = index;
+      }
+    });
+  }
+
   @override
   void initState() {
-    thisController.init(vsync: this);
-    scrollHourly.addListener(() {});
-    refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      thisController.init(vsync: this);
+      detectDateGroup();
+      refresh();
+    });
     super.initState();
   }
 
@@ -83,7 +99,7 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
           ),
           Container(color: Colors.black.withOpacity(0.4)),
           Positioned(
-            height: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 2,
             bottom: 0,
             left: 0,
             right: 0,
@@ -356,11 +372,11 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
 
   Widget hourlyForecastView() {
     final decoration = BoxDecoration(
-      color: Colors.blueGrey.withOpacity(0.2),
+      color: Colors.blueGrey.withOpacity(0.5),
       borderRadius: BorderRadius.circular(20),
     );
     return SizedBox(
-      height: 200,
+      height: 180,
       child: BlocBuilder<HourlyWeatherBloc, HourlyWeatherState>(
         builder: (context, state) {
           if (state is HourlyWeatherLoading) {
@@ -385,59 +401,105 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
               child: FadeTransition(
                 opacity: thisController.humidityAnimation,
                 child: Container(
+                  height: 200,
                   decoration: decoration,
-                  child: ListView.builder(
-                    controller: scrollHourly,
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: weathers.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: index == 0 ? 16 : 7,
-                          right: index == weathers.length - 1 ? 16 : 7,
-                        ),
-                        child: ItemHourly(weather: weathers[index]),
-                      );
-                    },
+                  child: Stack(
+                    children: [
+                      ListView.builder(
+                        controller: scrollHourly,
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: weathers.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: index == 0 ? 70 : 5,
+                              right: index == weathers.length - 1 ? 10 : 5,
+                            ),
+                            child: ItemHourly(weather: weathers[index]),
+                          );
+                        },
+                      ),
+                      ValueListenableBuilder<int>(
+                          valueListenable: leftIndexHourly,
+                          builder: (_, i, ___) {
+                            int lastIndex = weathers.length;
+                            int index = i <= 0
+                                ? 1
+                                : i > lastIndex
+                                    ? lastIndex
+                                    : i;
+                            Weather weather = weathers[index];
+                            String day =
+                                DateFormat('EEE').format(weather.dateTime);
+                            String date =
+                                DateFormat('d').format(weather.dateTime);
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              width: 50,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    day,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  Text(
+                                    date,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                    ],
                   ),
                   // child: GroupedListView<Weather, String>(
+                  //   controller: scrollHourly,
                   //   elements: weathers,
                   //   scrollDirection: Axis.horizontal,
                   //   padding: const EdgeInsets.all(0),
                   //   // itemExtent: 50,
                   //   physics: const BouncingScrollPhysics(),
-                  //   groupBy: (e) => DateFormat('yyyy-MM-dd').format(e.dateTime),
+                  //   groupBy: (e) =>
+                  //       DateFormat('yyyy-MM-dd').format(e.dateTime),
+                  //   // groupSeparatorBuilder: (value) {
+
+                  //   // },
                   //   groupHeaderBuilder: (e) {
                   //     String day = DateFormat('EEE').format(e.dateTime);
                   //     String date = DateFormat('d').format(e.dateTime);
                   //     return Align(
                   //       alignment: Alignment.centerLeft,
-                  //       child: Container(
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.blueGrey,
-                  //           borderRadius: BorderRadius.circular(12),
-                  //         ),
-                  //         margin: const EdgeInsets.all(16),
-                  //         width: 50,
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.center,
-                  //           children: [
-                  //             Text(
-                  //               day,
-                  //               style: const TextStyle(color: Colors.white),
-                  //             ),
-                  //             Text(
-                  //               date,
-                  //               style: const TextStyle(color: Colors.white),
-                  //             ),
-                  //           ],
-                  //         ),
+                  // child: Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.blueGrey,
+                  //     borderRadius: BorderRadius.circular(12),
+                  //   ),
+                  //   margin: const EdgeInsets.all(16),
+                  //   width: 50,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Text(
+                  //         day,
+                  //         style: const TextStyle(color: Colors.white),
+                  //       ),
+                  //       Text(
+                  //         date,
+                  //         style: const TextStyle(color: Colors.white),
+                  //       ),
+                  //     ],
+                  //   ),
                   //       ),
                   //     );
                   //   },
-                  //   useStickyGroupSeparators: true,
-                  //   floatingHeader: true,
+                  //   // useStickyGroupSeparators: true,
+                  //   // floatingHeader: true,
                   //   indexedItemBuilder: (context, weather, index) {
                   //     return Padding(
                   //       padding: EdgeInsets.only(
