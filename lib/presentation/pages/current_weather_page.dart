@@ -1,10 +1,8 @@
-import 'package:d_method/d_method.dart';
 import 'package:d_view/d_view.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_forecast/api/urls.dart';
 import 'package:weather_forecast/commons/app_route.dart';

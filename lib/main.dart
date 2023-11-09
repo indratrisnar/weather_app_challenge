@@ -7,8 +7,6 @@ import 'package:weather_forecast/commons/app_route.dart';
 import 'package:weather_forecast/presentation/bloc/current_weather/current_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/locations/locations_bloc.dart';
-import 'package:weather_forecast/presentation/pages/current_weather_page.dart';
-import 'package:weather_forecast/presentation/pages/locations_page.dart';
 
 import 'injection.dart';
 import 'presentation/controllers/city_controller.dart';
