@@ -6,7 +6,7 @@ import 'package:weather_forecast/presentation/controllers/city_controller.dart';
 import 'package:weather_forecast/data/source/city_source.dart';
 import 'package:weather_forecast/data/source/weather_source.dart';
 import 'package:http/http.dart' as http;
-import 'presentation/bloc/current_weather/current_weather_bloc.dart';
+import '../presentation/bloc/current_weather/current_weather_bloc.dart';
 
 final locator = GetIt.instance;
 
@@ -15,7 +15,7 @@ Future<void> initLocator() async {
   locator.registerFactory(() => CurrentWeatherBloc(locator()));
   locator.registerFactory(() => HourlyWeatherBloc(locator()));
   locator.registerFactory(() => CityController(locator()));
-  locator.registerFactory(() => LocationsBloc(locator()));
+  locator.registerFactory(() => LocationsBloc(locator(), locator()));
 
   // source
   locator.registerLazySingleton(() => WeatherSource(locator()));

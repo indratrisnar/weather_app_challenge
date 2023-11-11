@@ -1,16 +1,14 @@
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-
+import 'package:get/get.dart';
 import '../../controllers/city_controller.dart';
 
 class CurrentWeatherHeader extends StatelessWidget {
-  const CurrentWeatherHeader({
+  CurrentWeatherHeader({
     super.key,
-    required this.cityController,
     required this.menuOnPressed,
   });
-  final CityController cityController;
+  final CityController cityController = Get.find<CityController>();
   final VoidCallback menuOnPressed;
 
   @override
@@ -25,13 +23,13 @@ class CurrentWeatherHeader extends StatelessWidget {
         DView.width(4),
         Obx(
           () {
-            String cityName = cityController.currentCity;
+            String? cityName = cityController.currentCity.name;
             return Hero(
               tag: 'city_name_tag_$cityName',
               child: Material(
                 color: Colors.transparent,
                 child: Text(
-                  cityName == '' ? 'City is not setup' : cityName,
+                  cityName ?? 'City is not set',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,

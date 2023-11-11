@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:d_method/d_method.dart';
 import 'package:dartz/dartz.dart';
 import 'package:weather_forecast/api/urls.dart';
+import 'package:weather_forecast/data/models/city.dart';
 import 'package:weather_forecast/data/models/weather.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,14 +12,22 @@ class WeatherSource {
 
   WeatherSource(this.client);
 
-  Future<Either<String, Weather>> getCurrentWeather(String city) async {
-    Uri url = Uri.parse(URLs.currentWeather(city));
+  Future<Either<String, Weather>> getCurrentWeather(
+    String cityName,
+    bool hasImage,
+  ) async {
+    Uri url = Uri.parse(URLs.currentWeather(cityName));
     try {
       final response = await client.get(url);
-      // DMethod.printResponse(response);
+      // DMethod.logResponse(response);
       if (response.statusCode == 200) {
-        Weather weather = Weather.fromJson(jsonDecode(response.body));
+        Weather weather = Weather.fromJson(
+          jsonDecode(response.body),
+          hasImage: hasImage,
+        );
         return Right(weather);
+      } else if (response.statusCode == 404) {
+        return const Left('City not found');
       } else {
         return const Left('Fetch data error');
       }
@@ -34,7 +43,7 @@ class WeatherSource {
     Uri url = Uri.parse(URLs.hourlyWeather(city));
     try {
       final response = await client.get(url);
-      // DMethod.printResponse(response);
+      // DMethod.logResponse(response);
       if (response.statusCode == 200) {
         Map resBody = jsonDecode(response.body);
         List weatherList = resBody['list'];
@@ -53,16 +62,19 @@ class WeatherSource {
   }
 
   Future<Either<String, List<Weather>>> getLocationsWeather(
-    List<String> cities,
+    List<City> cities,
   ) async {
     try {
       List<Weather> list = [];
-      for (String city in cities) {
-        Uri url = Uri.parse(URLs.currentWeather(city));
+      for (City city in cities) {
+        Uri url = Uri.parse(URLs.currentWeather(city.name!));
         final response = await client.get(url);
-        // DMethod.printResponse(response);
+        // DMethod.logResponse(response);
         if (response.statusCode == 200) {
-          Weather weather = Weather.fromJson(jsonDecode(response.body));
+          Weather weather = Weather.fromJson(
+            jsonDecode(response.body),
+            hasImage: city.hasImage,
+          );
           list.add(weather);
         }
       }

@@ -9,9 +9,12 @@ class CurrentWeatherBloc
   final WeatherSource weatherSource;
   CurrentWeatherBloc(this.weatherSource) : super(CurrentWeatherInitial()) {
     on<OnGetCurrentWeather>((event, emit) async {
+      String cityName = event.cityName;
+      bool hasImage = event.hasImage;
       emit(CurrentWeatherLoading());
-      final result = await weatherSource.getCurrentWeather(event.city);
-      await Future.delayed(const Duration(milliseconds: 800));
+      final result = await weatherSource.getCurrentWeather(cityName, hasImage);
+      await Future.delayed(const Duration(milliseconds: 500));
+
       result.fold(
         (error) => emit(CurrentWeatherError(error)),
         (data) => emit(CurrentWeatherLoaded(data)),

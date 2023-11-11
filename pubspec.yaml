@@ -19,7 +19,7 @@ dependencies:
   get: ^4.6.6
   intl: ^0.18.1
   d_view: ^0.0.5
-  d_method: ^0.2.1
+  d_method: ^0.2.2
   d_input: ^0.1.2
   d_info: ^0.2.2
   d_button: ^0.0.10
@@ -27,7 +27,8 @@ dependencies:
   grouped_list: ^5.1.2
   shimmer: ^3.0.0
   rxdart: ^0.27.7
-  # animated_text_kit: ^4.2.2
+  path_provider: ^2.1.1
+  image_picker: ^1.0.4
 
 dev_dependencies:
   flutter_test:

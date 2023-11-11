@@ -1,5 +1,6 @@
+import 'package:weather_forecast/data/models/city.dart';
+
 class Weather {
-  final int id;
   final String main;
   final String description;
   final String icon;
@@ -9,10 +10,9 @@ class Weather {
   final num humidity;
   final num wind;
   final DateTime dateTime;
-  final String? cityName;
+  final City city;
 
   const Weather({
-    required this.id,
     required this.main,
     required this.description,
     required this.icon,
@@ -22,12 +22,11 @@ class Weather {
     required this.humidity,
     required this.wind,
     required this.dateTime,
-    this.cityName,
+    required this.city,
   });
 
-  factory Weather.fromJson(Map<String, dynamic> json) {
+  factory Weather.fromJson(Map<String, dynamic> json, {bool? hasImage}) {
     return Weather(
-      id: json['weather'][0]['id'],
       main: json['weather'][0]['main'],
       description: json['weather'][0]['description'],
       icon: json['weather'][0]['icon'],
@@ -37,29 +36,32 @@ class Weather {
       humidity: json['main']['humidity'],
       wind: json['wind']['speed'],
       dateTime: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
-      cityName: json['name'],
+      city: City(
+        name: json['name'],
+        hasImage: hasImage ?? false,
+      ),
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        "weather": [
-          {
-            "id": id,
-            "main": main,
-            "description": description,
-            "icon": icon,
-          }
-        ],
-        "main": {
-          "temp": temperature,
-          "feels_like": feelsLike,
-          "pressure": pressure,
-          "humidity": humidity,
-        },
-        "wind": {
-          "speed": wind,
-        },
-        "dt": dateTime.millisecondsSinceEpoch / 1000,
-        "name": cityName,
-      };
+  // Map<String, dynamic> toJson() => {
+  //       "weather": [
+  //         {
+  //           "id": id,
+  //           "main": main,
+  //           "description": description,
+  //           "icon": icon,
+  //         }
+  //       ],
+  //       "main": {
+  //         "temp": temperature,
+  //         "feels_like": feelsLike,
+  //         "pressure": pressure,
+  //         "humidity": humidity,
+  //       },
+  //       "wind": {
+  //         "speed": wind,
+  //       },
+  //       "dt": dateTime.millisecondsSinceEpoch / 1000,
+  //       "name": cityName,
+  //     };
 }

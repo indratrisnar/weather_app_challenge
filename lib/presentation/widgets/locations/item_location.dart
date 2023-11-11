@@ -5,40 +5,86 @@ import 'package:flutter/material.dart';
 import 'package:weather_forecast/api/urls.dart';
 import 'package:weather_forecast/data/models/weather.dart';
 
-class ItemCity extends StatelessWidget {
-  const ItemCity({super.key, required this.weather});
+class ItemLocation extends StatelessWidget {
+  const ItemLocation({
+    super.key,
+    required this.weather,
+    this.onDismissed,
+    this.onTap,
+  });
   final Weather weather;
+  final void Function(DismissDirection direction)? onDismissed;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Container().frosted(
-            blur: 2,
-            borderRadius: BorderRadius.circular(20),
-            frostColor: Colors.blueGrey,
-            frostOpacity: 0.5,
+    return GestureDetector(
+      onTap: onTap,
+      child: Dismissible(
+        key: UniqueKey(),
+        direction: DismissDirection.endToStart,
+        dismissThresholds: const {
+          DismissDirection.endToStart: 0.5,
+        },
+        background: Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            height: 50,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.keyboard_double_arrow_left_rounded,
+                ),
+                DView.width(8),
+                const Text(
+                  'Remove',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: left(),
+        onDismissed: onDismissed,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container().frosted(
+                blur: 2,
+                borderRadius: BorderRadius.circular(20),
+                frostColor: Colors.blueGrey,
+                frostOpacity: 0.5,
               ),
-              right(),
-            ],
-          ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: left(),
+                  ),
+                  right(),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -47,11 +93,11 @@ class ItemCity extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Hero(
-          tag: 'city_name_tag_${weather.cityName}',
+          tag: 'city_name_tag_${weather.city.name}',
           child: Material(
             color: Colors.transparent,
             child: Text(
-              weather.cityName ?? '',
+              weather.city.name ?? '',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

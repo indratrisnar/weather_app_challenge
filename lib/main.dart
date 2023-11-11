@@ -4,17 +4,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_forecast/commons/app_route.dart';
+import 'package:weather_forecast/core/helpers/dir.dart';
 import 'package:weather_forecast/presentation/bloc/current_weather/current_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/locations/locations_bloc.dart';
 
-import 'injection.dart';
+import 'core/injection.dart';
+import 'core/app_bloc_observer.dart';
 import 'presentation/controllers/city_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DView.defaultSpace = 20;
   await initLocator();
+  await Dir.init();
+  Bloc.observer = const AppBlocObserver();
   Get.put(locator<CityController>());
   runApp(const MainApp());
 }

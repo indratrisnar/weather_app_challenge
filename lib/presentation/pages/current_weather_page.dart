@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:d_view/d_view.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:weather_forecast/api/urls.dart';
 import 'package:weather_forecast/commons/app_route.dart';
+import 'package:weather_forecast/core/helpers/dir.dart';
+import 'package:weather_forecast/data/models/city.dart';
 import 'package:weather_forecast/data/models/weather.dart';
 import 'package:weather_forecast/presentation/bloc/current_weather/current_weather_bloc.dart';
 import 'package:weather_forecast/presentation/bloc/hourly_weather/hourly_weather_bloc.dart';
@@ -16,6 +21,7 @@ import 'package:weather_forecast/presentation/widgets/current_weather/current_we
 import 'package:weather_forecast/presentation/widgets/current_weather/current_weather_shimmer.dart';
 import 'package:weather_forecast/presentation/widgets/current_weather/hourly_weather_shimmer.dart';
 import 'package:weather_forecast/presentation/widgets/current_weather/item_hourly.dart';
+import 'package:weather_forecast/presentation/widgets/error_refresh_widget.dart';
 
 import '../widgets/current_weather/item_recap.dart';
 
@@ -32,12 +38,17 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
   CurrentWeatherController thisController = CurrentWeatherController();
   ScrollController scrollHourly = ScrollController();
   ValueNotifier<int> leftIndexHourly = ValueNotifier(0);
+  String backgroundPath = '';
 
   refresh() {
-    String currentCity = cityController.currentCity;
-    if (currentCity == '') return;
-    context.read<CurrentWeatherBloc>().add(OnGetCurrentWeather(currentCity));
-    context.read<HourlyWeatherBloc>().add(OnGetHourlyWeather(currentCity));
+    City currentCity = cityController.currentCity;
+    if (currentCity.name == null) return;
+    context
+        .read<CurrentWeatherBloc>()
+        .add(OnGetCurrentWeather(currentCity.name!, currentCity.hasImage));
+    context
+        .read<HourlyWeatherBloc>()
+        .add(OnGetHourlyWeather(currentCity.name!));
     thisController.reset();
   }
 
@@ -57,6 +68,9 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getApplicationDocumentsDirectory().then((dir) {
+        backgroundPath = dir.path;
+      });
       thisController.init(vsync: this);
       detectDateGroup();
       refresh();
@@ -79,7 +93,6 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
         forceMaterialTransparency: true,
         backgroundColor: Colors.transparent,
         title: CurrentWeatherHeader(
-          cityController: cityController,
           menuOnPressed: () {
             Navigator.pushNamed(context, AppRoute.locations).then((value) {
               if (value != null && value == 'refresh') refresh();
@@ -90,10 +103,20 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
       body: Stack(
         children: [
           Positioned.fill(
-            child: ExtendedImage.asset(
-              'assets/bg_default.jpg',
-              fit: BoxFit.cover,
-            ),
+            child: Obx(() {
+              if (cityController.currentCity.hasImage) {
+                return ExtendedImage.file(
+                  File(
+                    Dir.backgroundImagePath(cityController.currentCity.name!),
+                  ),
+                  fit: BoxFit.cover,
+                );
+              }
+              return ExtendedImage.asset(
+                'assets/bg_default.jpg',
+                fit: BoxFit.cover,
+              );
+            }),
           ),
           Container(color: Colors.black.withOpacity(0.4)),
           Positioned(
@@ -106,18 +129,35 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
           Positioned.fill(
             child: RefreshIndicator.adaptive(
               onRefresh: () async => refresh(),
-              child: ListView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: DView.defaultSpace,
-                ),
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  DView.height(kToolbarHeight * 2),
-                  currentWeatherView(),
-                  DView.height(30),
-                  hourlyForecastView(),
-                  DView.height(),
-                ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: DView.defaultSpace,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            DView.height(kToolbarHeight * 2),
+                            currentWeatherView(),
+                            DView.height(30),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: DView.defaultSpace),
+                              child: hourlyForecastView(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -138,7 +178,11 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
           return const CurrentWeatherShimmer();
         }
         if (state is CurrentWeatherError) {
-          return DView.error(data: state.message);
+          // return DView.error(data: state.message);
+          return ErrorRefreshWidget(
+            message: state.message,
+            onRefresh: () => refresh(),
+          );
         }
         if (state is CurrentWeatherLoaded) {
           Weather weather = state.weather;
@@ -423,58 +467,6 @@ class _CurrentWeatherStatePage extends State<CurrentWeatherPage>
                           }),
                     ],
                   ),
-                  // child: GroupedListView<Weather, String>(
-                  //   controller: scrollHourly,
-                  //   elements: weathers,
-                  //   scrollDirection: Axis.horizontal,
-                  //   padding: const EdgeInsets.all(0),
-                  //   // itemExtent: 50,
-                  //   physics: const BouncingScrollPhysics(),
-                  //   groupBy: (e) =>
-                  //       DateFormat('yyyy-MM-dd').format(e.dateTime),
-                  //   // groupSeparatorBuilder: (value) {
-
-                  //   // },
-                  //   groupHeaderBuilder: (e) {
-                  //     String day = DateFormat('EEE').format(e.dateTime);
-                  //     String date = DateFormat('d').format(e.dateTime);
-                  //     return Align(
-                  //       alignment: Alignment.centerLeft,
-                  // child: Container(
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.blueGrey,
-                  //     borderRadius: BorderRadius.circular(12),
-                  //   ),
-                  //   margin: const EdgeInsets.all(16),
-                  //   width: 50,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Text(
-                  //         day,
-                  //         style: const TextStyle(color: Colors.white),
-                  //       ),
-                  //       Text(
-                  //         date,
-                  //         style: const TextStyle(color: Colors.white),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //       ),
-                  //     );
-                  //   },
-                  //   // useStickyGroupSeparators: true,
-                  //   // floatingHeader: true,
-                  //   indexedItemBuilder: (context, weather, index) {
-                  //     return Padding(
-                  //       padding: EdgeInsets.only(
-                  //         left: index == 0 ? 0 : 7,
-                  //         right: index == weathers.length - 1 ? 16 : 7,
-                  //       ),
-                  //       child: ItemHourly(weather: weather),
-                  //     );
-                  //   },
-                  // ),
                 ),
               ),
             );
