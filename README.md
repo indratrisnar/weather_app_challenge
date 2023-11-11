@@ -1,9 +1,10 @@
 # Weather App - Coding Challenge #2
 
 API Key from: [https://home.openweathermap.org/api_keys](https://home.openweathermap.org/api_keys)
-from: [HeyFlutter](https://www.youtube.com/@HeyFlutter) Coding Challenge\
-detail: [https://youtu.be/5O1ZR0LaWfw?t=108](https://youtu.be/5O1ZR0LaWfw?t=108)\
-submit: [https://forms.gle/M65Pzox5xFrc2DoJ7](https://forms.gle/M65Pzox5xFrc2DoJ7)
+
+Challenge from: [HeyFlutter](https://www.youtube.com/@HeyFlutter) Coding Challenge\
+Detail: [https://youtu.be/5O1ZR0LaWfw?t=108](https://youtu.be/5O1ZR0LaWfw?t=108)\
+Submit: [https://forms.gle/M65Pzox5xFrc2DoJ7](https://forms.gle/M65Pzox5xFrc2DoJ7)
 
 ## Gallery
 
